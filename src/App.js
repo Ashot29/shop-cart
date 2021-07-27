@@ -1,25 +1,33 @@
-import logo from './logo.svg';
 import './App.css';
+import { useEffect, useState } from 'react';
+import store from './stateManagement/store';
+import { URL } from './url/url';
+import Nav from './components/nav/nav';
+import Main from './components/main/main';
+import { connect } from 'react-redux';
 
-function App() {
+function App(props) {
+  let { products, dispatch } = props
+
+  useEffect(() => {
+    fetch(URL)
+    .then(resp => resp.json())
+    .then(data => dispatch({type: 'GET_DATA', payload: {products: [...data]}}))
+  }, [])
+
+  console.log(props, 'props App')
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Nav />
+      <Main />
+    </>
   );
 }
 
-export default App;
+function mapStateToprops(state) {
+  return {
+    products: [...state.products]
+  }
+}
+
+export default connect(mapStateToprops)(App);
