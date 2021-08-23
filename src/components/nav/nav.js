@@ -1,20 +1,29 @@
 import React from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import './nav.css'
 
-function Nav() {
+function Nav(props) {
+  let { cartProducts, dispatch } = props;
   return (
-    <nav>
-      <div className="container">
-        <div className="nav-wrapper">
-          <ul>
-            <li><a href=''>Home</a></li>
-            <li><a href=''>My Cart</a></li>
-          </ul>
-          <div className='cart'><a href=''>Cart({0})</a></div>
+      <nav>
+        <div className="container">
+          <div className="nav-wrapper">
+            <ul>
+              <li><Link to='/'>Home</Link></li>
+              <li><Link to='/cart'>My Cart</Link></li>
+            </ul>
+            <div className='cart'><Link to='/cart'>Cart({cartProducts.length})</Link></div>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
   );
 }
 
-export default Nav;
+function mapStateToProps(state) {
+  return {
+    cartProducts: [...state.cartProducts]
+  }
+}
+
+export default connect(mapStateToProps)(Nav);

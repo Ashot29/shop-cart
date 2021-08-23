@@ -1,3 +1,4 @@
 export const initialState = {
-    products: []
+    products: [],
+    cartProducts: [],
 }

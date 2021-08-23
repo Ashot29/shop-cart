@@ -32,7 +32,7 @@
 
 .product-image > img {
     width: 250px;
-    height: auto;
+    height: 200px;
     margin: 0 auto;
 }
 
@@ -43,4 +43,8 @@
     color: #fff;
     font-weight: 700;
     margin: 25px 0;
+}
+
+.product-body > button:hover {
+    background-color: rgb(165, 92, 221);
 }

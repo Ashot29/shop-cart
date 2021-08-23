@@ -2,15 +2,16 @@ import React from "react";
 import './product.css'
 
 function Product(props) {
-    let { product } = props 
-    console.log(props, product)
+    let { product, data } = props;
+    let { products, dispatch, cartProducts } = data;
+
   return (
     <div className="product-wrapper">
       <div className="product-header">
         <h2>{product.Title}</h2>
       </div>
       <div className="product-body">
-        <div className="product-image">
+        <div className="product-image"> 
           <img src={product.ImageUrl} />
         </div>
         <div className="product-desc">
@@ -28,7 +29,7 @@ function Product(props) {
         <div className="product-price">
           <b>Price:</b> {product.Price}$
         </div>
-        <button>Add to Cart</button>
+        <button onClick={() => dispatch({type: 'ADD_TO_CART', payload: { selectedProduct: product }})}>Add to Cart</button>
       </div>
     </div>
   );

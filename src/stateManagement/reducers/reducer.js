@@ -7,6 +7,11 @@ function reducer(state = initialState, action) {
                 ...state,
                 products: [...action.payload.products]
             }
+        case 'ADD_TO_CART':
+            return {
+                ...state,
+                cartProducts: [...state.cartProducts, action.payload.selectedProduct]
+            }
         default: return state
     }
 }

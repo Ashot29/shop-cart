@@ -1,32 +1,34 @@
 import './App.css';
-import { useEffect, useState } from 'react';
-import store from './stateManagement/store';
+import { useEffect } from 'react';
 import { URL } from './url/url';
 import Nav from './components/nav/nav';
 import Main from './components/main/main';
+import Cart from './components/cart/cart';
 import { connect } from 'react-redux';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 function App(props) {
-  let { products, dispatch } = props
+  let { products, dispatch } = props;
 
   useEffect(() => {
     fetch(URL)
-    .then(resp => resp.json())
-    .then(data => dispatch({type: 'GET_DATA', payload: {products: [...data]}}))
+      .then(resp => resp.json())
+      .then(data => dispatch({ type: 'GET_DATA', payload: { products: [...data] } }))
   }, [])
-
-  console.log(props, 'props App')
   return (
-    <>
+    <BrowserRouter>
       <Nav />
-      <Main />
-    </>
+      <Switch>
+        <Route exact path='/' component={Main} />
+        <Route path='/cart' component={Cart} />
+      </Switch>
+    </BrowserRouter>
   );
 }
 
 function mapStateToprops(state) {
   return {
-    products: [...state.products]
+    ...state
   }
 }
 
