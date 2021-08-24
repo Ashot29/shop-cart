@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import './nav.css'
 
 function Nav(props) {
-  let { cartProducts, dispatch } = props;
+  let { cartProducts } = props; 
   return (
       <nav>
         <div className="container">

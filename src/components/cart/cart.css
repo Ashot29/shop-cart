@@ -1,0 +1,64 @@
+.cart-div {
+    margin-top: 80px;
+}
+
+.cart-table {
+    width: 100%;
+}
+
+.gray-row {
+    background-color: lightgray;
+}
+
+.table-quantity {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.quantity-input {
+    width: 80%;
+    padding: 5px;
+    border: 1px solid lightslategrey;
+}
+
+.quantity-input:hover {
+    background-color: lightslategrey;
+    color: #FFF;
+}
+
+.quantity-changer {
+    width: 10%;
+    border: 1px solid red;
+    background-color: #FFF;
+    color: red;
+}
+
+.updating-button {
+    padding: 10px;
+    font-weight: 700;
+    color: #FFF;
+    background-color: rgba(6, 6, 160, 0.671);
+    margin-top: 20px;
+    border: none;
+}
+
+.updating-button:hover {
+    background-color: rgba(26, 26, 235, 0.5);
+}
+
+.quantity-changer:hover {
+    background-color: red;
+    color: #FFF;
+}
+
+.table-head-number {
+    width: 5%;
+}
+
+.table-head-name {
+    width: 25%;
+}
+
+.table-head-price {
+    width: 15%;
+}
