@@ -1,21 +1,30 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { DEFAULT_URL } from '../../url/url';
 import './cart.css'
 
-const Cart = (props) => {
-    let { cartProducts, totalQuantity, totalPrice, dispatch } = props;
+const Cart = () => {
+    let [cart, setCart] = useState([]);
+
+    useEffect(() => {
+        fetch(`${DEFAULT_URL}/CartProducts`)
+        .then(resp => resp.json())
+        .then(data => {
+            setCart([...data])
+            console.log(data);
+        })
+    }, []);
+
 
     return (
         <div className='container' >
             <div className='cart-div' >
-                <h1 >My Cart({cartProducts.length}): </h1>
+                <h1 >My Cart({0}): </h1>
 
                 {
-                    !!cartProducts.length &&
+                    !!cart.length &&
                     <form id='cart-form' onSubmit={(event) => {
                         event.preventDefault();
-                        let inputs = Array.from(document.getElementsByClassName('quantity-input'));
-                        console.log(inputs)
+                        console.log(1)
                     }}>
                         <table className='cart-table' >
                             <thead className='cart-table-head' >
@@ -28,23 +37,30 @@ const Cart = (props) => {
                             </thead>
                             <tbody className='cart-table-body' >
                                 {
-                                    cartProducts.map((cartProduct, index) => {
+                                    cart.map((cartProduct, index) => {
                                         return (
                                             <tr className={'row-' + (index + 1)} key={index}>
                                                 <td className='table-number'>{index + 1}</td>
                                                 <td className='table-name'>{cartProduct.Title}</td>
                                                 <td className='table-price'>${cartProduct.Price}</td>
                                                 <td className='table-quantity'>
-                                                    <input type='number' className="quantity-input" defaultValue='1' min='1' data-price={cartProduct.Price} />
-                                                    <button className='quantity-changer' data-id={cartProduct.Id} data-price={cartProduct.Price} onClick={(event) => {
+                                                    <input type='number' className="quantity-input" defaultValue='1' min='1'/>
+                                                    <button className='quantity-changer'onClick={(event) => {
                                                         event.preventDefault();
-                                                        let id = event.target.dataset.id;
-                                                        cartProducts.forEach((item, index, array) => {
-                                                            if (item.Id === id) {
-                                                                array.splice(index, 1)
+                                                        fetch(`${DEFAULT_URL}/CartProducts/${cartProduct.id}`, {
+                                                            method: 'DELETE'
+                                                        })
+                                                        .then(resp => {
+                                                            if (resp.statusText === 'OK') {
+                                                                let arr = [...cart];
+                                                                arr.forEach((item, index) => {
+                                                                    if (item.id === cartProduct.id) {
+                                                                        arr.splice(index, 1)
+                                                                    }
+                                                                })
+                                                                setCart(arr)
                                                             }
                                                         })
-                                                        dispatch({type: 'REMOVE_FROM_CART', payload: {cartProducts}})
                                                     }}>
                                                         X 
                                                     </button>
@@ -71,12 +87,4 @@ const Cart = (props) => {
     );
 }
 
-function mapStateToProps(state) {
-    return {
-        totalQuantity: state.totalQuantity,
-        totalPrice: state.totalPrice,
-        cartProducts: [...state.cartProducts],
-    }
-}
-
-export default connect(mapStateToProps)(Cart);
+export default Cart;

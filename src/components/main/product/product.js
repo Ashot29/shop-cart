@@ -1,9 +1,9 @@
 import React from "react";
+import { DEFAULT_URL } from '../../../url/url'
 import './product.css'
 
 function Product(props) {
-    let { product, data } = props;
-    let { dispatch } = data;
+    let { product } = props;
 
     return (
         <div className="product-wrapper">
@@ -32,8 +32,21 @@ function Product(props) {
                     <b>Price:</b> {product.Price}$
                 </div>
                 <button onClick={() => {
-                    if (data.cartProducts.find(item => item.Id === product.Id)) return;
-                    dispatch({ type: 'ADD_TO_CART', payload: { selectedProduct: product } });
+                    fetch(`${DEFAULT_URL}/CartProducts/${product.id}`)
+                        .then(resp => {
+                            if (resp.status === 404) {
+                                fetch(`${DEFAULT_URL}/CartProducts`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-type': 'application/json; charset=UTF-8'
+                                    },
+                                    body: JSON.stringify(product)
+                                })
+                            } else if (resp.status >= 200 && resp.status < 300) {
+                                return resp.json()
+                            }
+                        })
+                        .then(data => console.log(data))
                 }}>
                     Add to Cart
                 </button>

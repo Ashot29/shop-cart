@@ -8,13 +8,14 @@ import { connect } from 'react-redux';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 function App(props) {
-  let { products, dispatch } = props;
+  let { dispatch } = props;
 
   useEffect(() => {
     fetch(URL)
       .then(resp => resp.json())
       .then(data => dispatch({ type: 'GET_DATA', payload: { products: [...data] } }))
   }, [])
+  
   return (
     <BrowserRouter>
       <Nav />
