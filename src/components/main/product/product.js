@@ -35,6 +35,7 @@ function Product(props) {
                     fetch(`${DEFAULT_URL}/CartProducts/${product.id}`)
                         .then(resp => {
                             if (resp.status === 404) {
+                                product.quantity = 1
                                 fetch(`${DEFAULT_URL}/CartProducts`, {
                                     method: 'POST',
                                     headers: {
@@ -43,7 +44,17 @@ function Product(props) {
                                     body: JSON.stringify(product)
                                 })
                             } else if (resp.status >= 200 && resp.status < 300) {
-                                return resp.json()
+                                if (product.quantity) {
+                                    product.quantity += 1
+                                } else product.quantity = 2;
+                                fetch(`${DEFAULT_URL}/CartProducts/${product.id}`, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify(product),
+                                })
+                                return resp.json();
                             }
                         })
                         .then(data => console.log(data))

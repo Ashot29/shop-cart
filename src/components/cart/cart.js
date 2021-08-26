@@ -4,21 +4,35 @@ import './cart.css'
 
 const Cart = () => {
     let [cart, setCart] = useState([]);
+    let [sum, setSum] = useState(0);
+    let [itemCount, setItemCount] = useState(0)
 
     useEffect(() => {
         fetch(`${DEFAULT_URL}/CartProducts`)
-        .then(resp => resp.json())
-        .then(data => {
-            setCart([...data])
-            console.log(data);
-        })
+            .then(resp => resp.json())
+            .then(data => {
+                setCart([...data]);
+            })
     }, []);
+
+    useEffect(() => {
+        if (!!cart.length) {
+            let count = 0;
+            let sum = 0;
+            cart.forEach(item => {
+                sum += (item.quantity * item.Price)
+                count += item.quantity
+            });
+            setItemCount(count);
+            setSum(sum)
+        }
+    }, [cart])
 
 
     return (
         <div className='container' >
             <div className='cart-div' >
-                <h1 >My Cart({0}): </h1>
+                <h1 >My Cart({cart.length}): </h1>
 
                 {
                     !!cart.length &&
@@ -44,25 +58,26 @@ const Cart = () => {
                                                 <td className='table-name'>{cartProduct.Title}</td>
                                                 <td className='table-price'>${cartProduct.Price}</td>
                                                 <td className='table-quantity'>
-                                                    <input type='number' className="quantity-input" defaultValue='1' min='1'/>
-                                                    <button className='quantity-changer'onClick={(event) => {
+                                                    <input type='number' className="quantity-input" defaultValue={cartProduct.quantity} min='1' />
+                                                    <button className='quantity-changer' onClick={(event) => {
                                                         event.preventDefault();
                                                         fetch(`${DEFAULT_URL}/CartProducts/${cartProduct.id}`, {
                                                             method: 'DELETE'
                                                         })
-                                                        .then(resp => {
-                                                            if (resp.statusText === 'OK') {
-                                                                let arr = [...cart];
-                                                                arr.forEach((item, index) => {
-                                                                    if (item.id === cartProduct.id) {
-                                                                        arr.splice(index, 1)
-                                                                    }
-                                                                })
-                                                                setCart(arr)
-                                                            }
-                                                        })
+                                                            .then(resp => {
+                                                                if (resp.statusText === 'OK') {
+                                                                    let arr = [...cart];
+                                                                    arr.forEach((item, index) => {
+                                                                        if (item.id === cartProduct.id) {
+                                                                            arr.splice(index, 1)
+                                                                        }
+                                                                    })
+                                                                    setCart(arr);
+                                                                    setSum(0);
+                                                                }
+                                                            })
                                                     }}>
-                                                        X 
+                                                        X
                                                     </button>
                                                 </td>
                                             </tr>
@@ -74,8 +89,8 @@ const Cart = () => {
                                 <tr className='gray-row'>
                                     <td></td>
                                     <td><b>Subtotal</b></td>
-                                    <td><b>${0}</b></td>
-                                    <td><b>{0} items</b></td>
+                                    <td><b>${sum}</b></td>
+                                    <td><b>{itemCount} items</b></td>
                                 </tr>
                             </tfoot>
                         </table>
