@@ -21,7 +21,7 @@ const Cart = () => {
             let sum = 0;
             cart.forEach(item => {
                 sum += (item.quantity * item.Price)
-                count += item.quantity
+                count += +item.quantity
             });
             setItemCount(count);
             setSum(sum)
@@ -38,7 +38,9 @@ const Cart = () => {
                     !!cart.length &&
                     <form id='cart-form' onSubmit={(event) => {
                         event.preventDefault();
-                        console.log(1)
+                        fetch(`${DEFAULT_URL}/CartProducts`)
+                        .then(resp => resp.json())
+                        .then(data => setCart([...data]))
                     }}>
                         <table className='cart-table' >
                             <thead className='cart-table-head' >
@@ -58,7 +60,22 @@ const Cart = () => {
                                                 <td className='table-name'>{cartProduct.Title}</td>
                                                 <td className='table-price'>${cartProduct.Price}</td>
                                                 <td className='table-quantity'>
-                                                    <input type='number' className="quantity-input" defaultValue={cartProduct.quantity} min='1' />
+                                                    <input type='number' className="quantity-input" defaultValue={cartProduct.quantity} min='1' 
+                                                        onChange={event =>{
+                                                            let val = event.target.value;
+                                                            setTimeout(() => {
+                                                                if (val !== event.target.value) return;
+                                                                cartProduct.quantity = event.target.value;
+                                                                fetch(`${DEFAULT_URL}/CartProducts/${cartProduct.id}`, {
+                                                                    method: 'PUT',
+                                                                    headers: {
+                                                                        'Content-Type': 'application/json',
+                                                                    },
+                                                                    body: JSON.stringify(cartProduct)
+                                                                })
+                                                            }, 1000)
+                                                        }}
+                                                    />
                                                     <button className='quantity-changer' onClick={(event) => {
                                                         event.preventDefault();
                                                         fetch(`${DEFAULT_URL}/CartProducts/${cartProduct.id}`, {
